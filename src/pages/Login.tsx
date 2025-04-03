@@ -24,28 +24,28 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 font-quicksand">
+    <div className="min-h-screen flex items-center justify-center p-4 font-quicksand bg-[#1E1E1E]">
       <div className="absolute top-4 right-4">
         <ThemeToggle />
       </div>
-      <Card className="w-full max-w-md eink-card">
+      <Card className="w-full max-w-md mx-auto bg-[#000000]">
         <CardHeader className="space-y-2">
           <div className="flex items-center justify-center mb-6">
-            <div className="bg-eink-black dark:bg-eink-white rounded-full p-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-eink-white dark:text-eink-black">
+            <div className="bg-white rounded-full p-3">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-black">
                 <path d="M2 9V5c0-1.1.9-2 2-2h4m10 2h4c1.1 0 2 .9 2 2v4m-10 10h-4c-1.1 0-2-.9-2-2v-4"></path>
               </svg>
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold text-center">Login</CardTitle>
-          <CardDescription className="text-center">
+          <CardTitle className="text-2xl font-bold text-center text-white">Login</CardTitle>
+          <CardDescription className="text-center text-gray-300">
             Entre com suas credenciais para acessar o sistema
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium">Email</label>
+              <label htmlFor="email" className="text-sm font-medium text-white">Email</label>
               <Input
                 id="email"
                 type="email"
@@ -53,11 +53,11 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="eink-input"
+                className="bg-[#1E1E1E] border-gray-600 text-white"
               />
             </div>
             <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium">Senha</label>
+              <label htmlFor="password" className="text-sm font-medium text-white">Senha</label>
               <Input
                 id="password"
                 type="password"
@@ -65,20 +65,20 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="eink-input"
+                className="bg-[#1E1E1E] border-gray-600 text-white"
               />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col">
             <Button
               type="submit"
-              className="w-full eink-button"
+              className="w-full bg-white text-black hover:bg-gray-200"
               disabled={isLoading}
             >
               {isLoading ? "Entrando..." : "Entrar"}
             </Button>
             <div className="mt-4 text-center text-sm">
-              <a href="#" className="eink-link text-sm">
+              <a href="#" className="text-gray-300 hover:text-white">
                 Esqueceu sua senha?
               </a>
             </div>

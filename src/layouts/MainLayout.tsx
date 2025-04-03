@@ -6,7 +6,6 @@ import {
 import { ThemeToggle } from "@/components/ThemeToggle";
 import AppSidebar from "@/components/AppSidebar";
 import { useState } from "react";
-import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
@@ -33,6 +32,13 @@ const MainLayout = () => {
                 <HelpCircle className="h-5 w-5" />
               </Button>
               <ThemeToggle />
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="rounded-full text-destructive"
+              >
+                <LogOut className="h-5 w-5" />
+              </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Avatar className="w-8 h-8 cursor-pointer">
@@ -46,10 +52,6 @@ const MainLayout = () => {
                   <DropdownMenuItem>
                     <Settings className="mr-2 h-4 w-4" />
                     <span>Settings</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="text-destructive">
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Logout</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

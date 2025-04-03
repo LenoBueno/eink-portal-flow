@@ -1,10 +1,9 @@
-
 import { Link } from "react-router-dom";
 import { 
   PackageIcon, ShoppingCartIcon, LayoutDashboardIcon, 
   Users2Icon, BarChart3Icon, Settings2Icon,
   Store, CreditCard, Package, Notebook, StoreIcon,
-  ChevronDown, ChevronRight, HelpCircle, LogOut
+  ChevronDown, ChevronRight
 } from "lucide-react";
 import {
   Sidebar,
@@ -183,16 +182,7 @@ const AppSidebar = () => {
         ))}
       </SidebarContent>
       <SidebarFooter className="mt-auto p-4 border-t">
-        <div className="flex flex-col space-y-2">
-          <Link to="/help" className="flex items-center text-sm text-muted-foreground hover:text-foreground">
-            <HelpCircle className="mr-2 h-5 w-5" />
-            <span>Help</span>
-          </Link>
-          <Link to="/logout" className="flex items-center text-sm text-destructive">
-            <LogOut className="mr-2 h-5 w-5" />
-            <span>Logout Account</span>
-          </Link>
-        </div>
+        {/* Footer content removed as requested */}
       </SidebarFooter>
     </Sidebar>
   );
