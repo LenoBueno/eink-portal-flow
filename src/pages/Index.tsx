@@ -6,8 +6,8 @@ const Index = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Redirect to dashboard page
-    navigate("/");
+    // Redirect to login page
+    navigate("/login");
   }, [navigate]);
 
   return (

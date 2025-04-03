@@ -1,5 +1,5 @@
 
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
@@ -13,6 +13,12 @@ import { Bell, HelpCircle, LogOut, Settings } from "lucide-react";
 
 const MainLayout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  
+  const handleLogout = () => {
+    // Add any logout logic here (clear tokens, etc)
+    navigate('/login');
+  };
   
   return (
     <div className="min-h-screen flex w-full font-quicksand">
@@ -32,13 +38,6 @@ const MainLayout = () => {
                 <HelpCircle className="h-5 w-5" />
               </Button>
               <ThemeToggle />
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="rounded-full text-destructive"
-              >
-                <LogOut className="h-5 w-5" />
-              </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Avatar className="w-8 h-8 cursor-pointer">
@@ -53,8 +52,20 @@ const MainLayout = () => {
                     <Settings className="mr-2 h-4 w-4" />
                     <span>Settings</span>
                   </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4 text-destructive" />
+                    <span className="text-destructive">Logout</span>
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="rounded-full text-destructive"
+                onClick={handleLogout}
+              >
+                <LogOut className="h-5 w-5" />
+              </Button>
             </div>
           </div>
         </header>
