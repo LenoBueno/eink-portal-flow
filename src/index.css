@@ -46,13 +46,14 @@
   }
 
   .dark {
-    --background: 0 0% 5%;
+    /* Updated dark colors based on image 2 */
+    --background: 240 1% 22%; /* #37373D */
     --foreground: 0 0% 98%;
 
-    --card: 0 0% 3%;
+    --card: 0 0% 15%; /* #262626 */
     --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 3%;
+    --popover: 0 0% 12%; /* #1E1E1E */
     --popover-foreground: 0 0% 98%;
 
     --primary: 0 0% 98%;
@@ -74,7 +75,7 @@
     --input: 0 0% 20%;
     --ring: 0 0% 80%;
     
-    --sidebar-background: 0 0% 5%;
+    --sidebar-background: 0 0% 12%; /* #1E1E1E */
     --sidebar-foreground: 0 0% 98%;
     --sidebar-primary: 0 0% 98%;
     --sidebar-primary-foreground: 0 0% 10%;
