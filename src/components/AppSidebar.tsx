@@ -149,8 +149,8 @@ const AppSidebar = () => {
             <AvatarFallback>JD</AvatarFallback>
           </Avatar>
           <div className="flex flex-col">
-            <span className="text-xs text-muted-foreground">ENGLISH (UNITED)</span>
-            <span className="font-semibold text-sm">Jackson Smith</span>
+            <span className="text-xs text-muted-foreground">PORTUGUÊS (BRASIL)</span>
+            <span className="font-semibold text-sm">Lenoir Bueno</span>
           </div>
         </div>
       </SidebarHeader>
@@ -168,7 +168,7 @@ const AppSidebar = () => {
                       <CollapsibleSidebarItem item={item} />
                     ) : (
                       <SidebarMenuButton asChild>
-                        <Link to={item.href} className="flex items-center">
+                        <Link to={item.href} className="flex items-center" onClick={(e) => e.preventDefault()}>
                           <item.icon className="mr-2 h-5 w-5" />
                           <span>{item.title}</span>
                         </Link>
@@ -181,7 +181,7 @@ const AppSidebar = () => {
           </SidebarGroup>
         ))}
       </SidebarContent>
-      <SidebarFooter className="mt-auto p-4 border-t">
+      <SidebarFooter className="mt-auto p-4">
         {/* Footer content removed as requested */}
       </SidebarFooter>
     </Sidebar>
@@ -216,6 +216,7 @@ const CollapsibleSidebarItem: React.FC<CollapsibleSidebarItemProps> = ({ item })
             key={subItem.title}
             to={subItem.href}
             className="flex items-center py-1.5 px-2 text-sm rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+            onClick={(e) => e.preventDefault()}
           >
             <span className="text-muted-foreground">{subItem.title}</span>
           </Link>

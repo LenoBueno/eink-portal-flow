@@ -1,4 +1,3 @@
-
 import { Outlet, useNavigate } from "react-router-dom";
 import {
   SidebarTrigger,
@@ -38,6 +37,14 @@ const MainLayout = () => {
                 <HelpCircle className="h-5 w-5" />
               </Button>
               <ThemeToggle />
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="rounded-full text-destructive"
+                onClick={handleLogout}
+              >
+                <LogOut className="h-5 w-5" />
+              </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Avatar className="w-8 h-8 cursor-pointer">
@@ -58,14 +65,6 @@ const MainLayout = () => {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="rounded-full text-destructive"
-                onClick={handleLogout}
-              >
-                <LogOut className="h-5 w-5" />
-              </Button>
             </div>
           </div>
         </header>

@@ -50,7 +50,7 @@
     --background: 220 15% 21%; /* #37373D - matching the image 1 left color */
     --foreground: 0 0% 100%;
 
-    --card: 220 10% 15%; /* #252526 - matching the image 1 middle color */
+    --card: 220 15% 18%; /* Ajustado para combinar com o formulário de login */
     --card-foreground: 0 0% 100%;
 
     --popover: 220 10% 12%; /* #1E1E1E - matching the image 1 right color */
@@ -98,7 +98,7 @@
 
 @layer components {
   .eink-card {
-    @apply bg-eink-white dark:bg-eink-black border border-eink-lightGray dark:border-eink-dark rounded-md shadow-none transition-colors;
+    @apply bg-eink-white dark:bg-[#1E1E1E] border border-eink-lightGray dark:border-eink-dark rounded-md shadow-lg transition-colors;
   }
   
   .eink-button {
