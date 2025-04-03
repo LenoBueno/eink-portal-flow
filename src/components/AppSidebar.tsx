@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import { 
   PackageIcon, ShoppingCartIcon, LayoutDashboardIcon, 
   Users2Icon, BarChart3Icon, Settings2Icon,
-  Store, CreditCard, Package, Notebook, StoreIcon
+  Store, CreditCard, Package, Notebook, StoreIcon,
+  ChevronDown, ChevronRight, HelpCircle, LogOut
 } from "lucide-react";
 import {
   Sidebar,
@@ -17,11 +18,16 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface SidebarItem {
   title: string;
   icon: React.ElementType;
   href: string;
+  subItems?: SidebarItem[];
 }
 
 interface SidebarSection {
@@ -31,7 +37,7 @@ interface SidebarSection {
 
 const sidebarSections: SidebarSection[] = [
   {
-    title: "Principal",
+    title: "Menu",
     items: [
       {
         title: "Dashboard",
@@ -67,6 +73,18 @@ const sidebarSections: SidebarSection[] = [
         title: "Pedidos/Orçamentos",
         icon: ShoppingCartIcon,
         href: "/compras/pedidos-orcamentos",
+        subItems: [
+          {
+            title: "Em Aberto",
+            icon: ChevronRight,
+            href: "/compras/em-aberto",
+          },
+          {
+            title: "Devoluções",
+            icon: ChevronRight,
+            href: "/compras/devolucoes",
+          }
+        ]
       },
       {
         title: "Fornecedores",
@@ -111,7 +129,7 @@ const sidebarSections: SidebarSection[] = [
     ],
   },
   {
-    title: "Configurações",
+    title: "My Account",
     items: [
       {
         title: "Configurações",
@@ -124,25 +142,39 @@ const sidebarSections: SidebarSection[] = [
 
 const AppSidebar = () => {
   return (
-    <Sidebar>
-      <SidebarHeader className="p-4 flex items-center space-x-2">
-        <Notebook className="w-6 h-6" />
-        <span className="font-semibold text-lg">ERP System</span>
+    <Sidebar className="border-r">
+      <SidebarHeader className="p-4 flex flex-col items-center">
+        <div className="flex items-center gap-2.5 mb-1">
+          <Avatar className="w-8 h-8">
+            <AvatarImage src="/placeholder.svg" />
+            <AvatarFallback>JD</AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col">
+            <span className="text-xs text-muted-foreground">ENGLISH (UNITED)</span>
+            <span className="font-semibold text-sm">Jackson Smith</span>
+          </div>
+        </div>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="px-2">
         {sidebarSections.map((section) => (
-          <SidebarGroup key={section.title}>
-            <SidebarGroupLabel>{section.title}</SidebarGroupLabel>
+          <SidebarGroup key={section.title} className="mb-4">
+            <SidebarGroupLabel className="text-xs tracking-wider text-muted-foreground ml-2 mb-1">
+              {section.title.toUpperCase()}
+            </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {section.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <Link to={item.href} className="flex items-center">
-                        <item.icon className="mr-2 h-5 w-5" />
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
+                    {item.subItems ? (
+                      <CollapsibleSidebarItem item={item} />
+                    ) : (
+                      <SidebarMenuButton asChild>
+                        <Link to={item.href} className="flex items-center">
+                          <item.icon className="mr-2 h-5 w-5" />
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    )}
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>
@@ -150,12 +182,56 @@ const AppSidebar = () => {
           </SidebarGroup>
         ))}
       </SidebarContent>
-      <SidebarFooter className="p-4 border-t">
-        <div className="flex items-center justify-center">
-          <span className="text-xs text-muted-foreground">v1.0.0</span>
+      <SidebarFooter className="mt-auto p-4 border-t">
+        <div className="flex flex-col space-y-2">
+          <Link to="/help" className="flex items-center text-sm text-muted-foreground hover:text-foreground">
+            <HelpCircle className="mr-2 h-5 w-5" />
+            <span>Help</span>
+          </Link>
+          <Link to="/logout" className="flex items-center text-sm text-destructive">
+            <LogOut className="mr-2 h-5 w-5" />
+            <span>Logout Account</span>
+          </Link>
         </div>
       </SidebarFooter>
     </Sidebar>
+  );
+};
+
+interface CollapsibleSidebarItemProps {
+  item: SidebarItem;
+}
+
+const CollapsibleSidebarItem: React.FC<CollapsibleSidebarItemProps> = ({ item }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  
+  return (
+    <Collapsible open={isOpen} onOpenChange={setIsOpen} className="w-full">
+      <CollapsibleTrigger asChild>
+        <button className="flex items-center justify-between w-full py-2 px-3 text-sm rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+          <div className="flex items-center">
+            <item.icon className="mr-2 h-5 w-5" />
+            <span>{item.title}</span>
+          </div>
+          {isOpen ? (
+            <ChevronDown className="h-4 w-4" />
+          ) : (
+            <ChevronRight className="h-4 w-4" />
+          )}
+        </button>
+      </CollapsibleTrigger>
+      <CollapsibleContent className="pl-8 pt-1 space-y-1">
+        {item.subItems?.map((subItem) => (
+          <Link 
+            key={subItem.title}
+            to={subItem.href}
+            className="flex items-center py-1.5 px-2 text-sm rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+          >
+            <span className="text-muted-foreground">{subItem.title}</span>
+          </Link>
+        ))}
+      </CollapsibleContent>
+    </Collapsible>
   );
 };
 
