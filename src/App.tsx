@@ -11,6 +11,8 @@ import Dashboard from "./pages/Dashboard";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import ProductsPage from "./pages/catalog/ProductsPage";
 import ProductForm from "./pages/catalog/ProductForm";
+import ClientsPage from "./pages/catalog/ClientsPage";
+import ClientForm from "./pages/ClientForm";
 
 // Importações de páginas de configurações
 import SettingsLayout from "./pages/settings/SettingsLayout";
@@ -59,6 +61,11 @@ function App() {
                   <Route path="catalog/produtos" element={<ProductsPage />} />
                   <Route path="catalog/produtos/novo" element={<ProductForm />} />
                   <Route path="catalog/produtos/editar/:id" element={<ProductForm />} />
+                  
+                  {/* Rotas de Clientes */}
+                  <Route path="clientes" element={<ClientsPage />} />
+                  <Route path="clientes/novo" element={<ClientForm />} />
+                  <Route path="clientes/editar/:id" element={<ClientForm />} />
                   
                   {/* Rotas de configurações */}
                   <Route path="settings" element={<SettingsLayout />}>

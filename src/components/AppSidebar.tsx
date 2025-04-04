@@ -100,7 +100,7 @@ const sidebarSections: SidebarSection[] = [
       },
       {
         title: "Clientes",
-        href: "/dashboard/vendas/clientes",
+        href: "/dashboard/clientes",
       },
     ],
   },
