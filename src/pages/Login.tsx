@@ -54,7 +54,6 @@ const Login = () => {
         <ThemeToggle />
       </div>
       <Card className="w-full max-w-md shadow-lg dark:bg-[#1E1E1E] transition-all">
-      <Card className="w-full max-w-sm">
         <CardHeader className="space-y-2">
           <div className="flex items-center justify-center mb-6">
             <div className="bg-black dark:bg-white rounded-full p-3">
@@ -96,7 +95,6 @@ const Login = () => {
           <CardFooter className="flex flex-col gap-4">
             <Button
               type="submit"
-              className="w-full bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200"
               className="w-full bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200"
               disabled={isLoading}
             >
