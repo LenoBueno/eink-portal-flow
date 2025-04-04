@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { 
@@ -32,7 +31,7 @@ import {
 } from "@/types/product";
 import ProductImageUpload from "@/components/catalog/ProductImageUpload";
 import ProductPriceCalculator from "@/components/catalog/ProductPriceCalculator";
-import ProductCompositionItem from "@/components/catalog/ProductCompositionItem";
+import ProductCompositionItemComponent from "@/components/catalog/ProductCompositionItem";
 import { 
   getProductById, 
   createProduct, 
@@ -49,7 +48,6 @@ const ProductForm = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [subcategories, setSubcategories] = useState<string[]>([]);
 
-  // Product state
   const [product, setProduct] = useState<Product>({
     id: "",
     code: "",
@@ -77,7 +75,6 @@ const ProductForm = () => {
     composition: []
   });
 
-  // Fetch product data if editing
   useEffect(() => {
     const fetchProduct = async () => {
       if (id) {
@@ -99,13 +96,11 @@ const ProductForm = () => {
     fetchProduct();
   }, [id]);
 
-  // Update subcategories when category changes
   useEffect(() => {
     if (selectedCategory) {
       const categorySubcategories = SUBCATEGORIES[selectedCategory as keyof typeof SUBCATEGORIES] || [];
       setSubcategories(categorySubcategories);
       
-      // If current subcategory is not in the new list, reset it
       if (!categorySubcategories.includes(product.subcategory)) {
         setProduct(prev => ({
           ...prev,
@@ -226,7 +221,6 @@ const ProductForm = () => {
         await createProduct(product);
       }
       
-      // Navigate back to product list
       navigate("/catalog/produtos");
     } catch (error) {
       console.error("Error saving product:", error);
@@ -259,10 +253,8 @@ const ProductForm = () => {
             <TabsTrigger value="characteristics">Características</TabsTrigger>
           </TabsList>
           
-          {/* Product and Prices Tab */}
           <TabsContent value="product" className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              {/* Left column with image */}
               <div className="col-span-1">
                 <ProductImageUpload 
                   initialImage={product.image}
@@ -270,9 +262,7 @@ const ProductForm = () => {
                 />
               </div>
               
-              {/* Right column with product details */}
               <div className="col-span-3 space-y-4">
-                {/* Product Codes */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="code">Código do Produto</Label>
@@ -308,7 +298,6 @@ const ProductForm = () => {
                   </div>
                 </div>
 
-                {/* Product Name and Description */}
                 <div className="space-y-2">
                   <Label htmlFor="name">Nome do Produto</Label>
                   <Input
@@ -331,7 +320,6 @@ const ProductForm = () => {
                   />
                 </div>
 
-                {/* Product Type, Unit, Category */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="productType">Tipo de Produto</Label>
@@ -389,7 +377,6 @@ const ProductForm = () => {
                   </div>
                 </div>
 
-                {/* Category and Subcategory */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="category">Categoria</Label>
@@ -428,7 +415,6 @@ const ProductForm = () => {
               </div>
             </div>
 
-            {/* Prices Section */}
             <div className="border-t pt-6">
               <h3 className="text-lg font-medium mb-4">Preços</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -488,9 +474,7 @@ const ProductForm = () => {
             </div>
           </TabsContent>
           
-          {/* Characteristics Tab */}
           <TabsContent value="characteristics" className="space-y-6">
-            {/* Stock Movement Options */}
             <div className="border rounded-lg p-4">
               <h3 className="text-lg font-medium mb-4">Estoque</h3>
               <div className="space-y-4">
@@ -525,7 +509,6 @@ const ProductForm = () => {
               </div>
             </div>
             
-            {/* Fiscal Information */}
             <div className="border rounded-lg p-4">
               <h3 className="text-lg font-medium mb-4">Informações Fiscais</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -587,7 +570,6 @@ const ProductForm = () => {
               </div>
             </div>
             
-            {/* Classification */}
             <div className="border rounded-lg p-4">
               <h3 className="text-lg font-medium mb-4">Classificação</h3>
               <div className="space-y-2">
@@ -608,7 +590,6 @@ const ProductForm = () => {
               </div>
             </div>
             
-            {/* Composition */}
             <div className="border rounded-lg p-4">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-medium">Composição</h3>
@@ -639,7 +620,7 @@ const ProductForm = () => {
                   </div>
                   
                   {product.composition.map((item, index) => (
-                    <ProductCompositionItem
+                    <ProductCompositionItemComponent
                       key={item.id}
                       index={index}
                       productName={item.productName}
