@@ -171,7 +171,7 @@ const AppSidebar = () => {
                     ) : (
                       <SidebarMenuButton 
                         asChild 
-                        active={location.pathname === item.href || location.pathname.startsWith(item.href + "/")}
+                        isActive={location.pathname === item.href || location.pathname.startsWith(item.href + "/")}
                       >
                         <Link to={item.href} className="flex items-center">
                           <item.icon className="mr-2 h-5 w-5" />
