@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { 
@@ -47,6 +48,8 @@ const ProductForm = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [subcategories, setSubcategories] = useState<string[]>([]);
+  const [isCostPriceFocused, setIsCostPriceFocused] = useState(false);
+  const [isWholesaleQtyFocused, setIsWholesaleQtyFocused] = useState(false);
 
   const [product, setProduct] = useState<Product>({
     id: "",
@@ -122,7 +125,7 @@ const ProductForm = () => {
     const { name, value } = e.target;
     setProduct(prev => ({
       ...prev,
-      [name]: parseFloat(value) || 0
+      [name]: value === '' ? 0 : parseFloat(value)
     }));
   };
 
@@ -209,6 +212,10 @@ const ProductForm = () => {
     });
   };
 
+  const handleCancel = () => {
+    navigate("/dashboard/catalog/produtos");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -221,7 +228,7 @@ const ProductForm = () => {
         await createProduct(product);
       }
       
-      navigate("/catalog/produtos");
+      navigate("/dashboard/catalog/produtos");
     } catch (error) {
       console.error("Error saving product:", error);
     } finally {
@@ -427,9 +434,11 @@ const ProductForm = () => {
                       <Input
                         id="costPrice"
                         name="costPrice"
-                        type="number"
-                        value={product.costPrice}
+                        type={isCostPriceFocused ? "number" : "text"}
+                        value={isCostPriceFocused ? (product.costPrice === 0 ? '' : product.costPrice) : `${product.costPrice.toFixed(2)}`}
                         onChange={handleNumberInputChange}
+                        onFocus={() => setIsCostPriceFocused(true)}
+                        onBlur={() => setIsCostPriceFocused(false)}
                         step="0.01"
                         min="0"
                         placeholder="0,00"
@@ -462,9 +471,11 @@ const ProductForm = () => {
                     <Input
                       id="minWholesaleQty"
                       name="minWholesaleQty"
-                      type="number"
-                      value={product.minWholesaleQty}
+                      type={isWholesaleQtyFocused ? "number" : "text"}
+                      value={isWholesaleQtyFocused ? (product.minWholesaleQty === 0 ? '' : product.minWholesaleQty) : product.minWholesaleQty}
                       onChange={handleNumberInputChange}
+                      onFocus={() => setIsWholesaleQtyFocused(true)}
+                      onBlur={() => setIsWholesaleQtyFocused(false)}
                       min="0"
                       step="1"
                     />
@@ -653,7 +664,7 @@ const ProductForm = () => {
             type="button"
             variant="outline"
             className="mr-2"
-            onClick={() => navigate("/catalog/produtos")}
+            onClick={handleCancel}
           >
             Cancelar
           </Button>

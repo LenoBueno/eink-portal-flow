@@ -20,6 +20,8 @@ const ProductPriceCalculator = ({
 }: ProductPriceCalculatorProps) => {
   const [retailMargin, setRetailMargin] = useState<number>(0);
   const [wholesaleMargin, setWholesaleMargin] = useState<number>(0);
+  const [isRetailFocused, setIsRetailFocused] = useState<boolean>(false);
+  const [isWholesaleFocused, setIsWholesaleFocused] = useState<boolean>(false);
 
   useEffect(() => {
     if (costPrice > 0) {
@@ -53,9 +55,11 @@ const ProductPriceCalculator = ({
         </label>
         <div className="relative mt-1.5">
           <Input
-            type="number"
-            value={retailPrice}
+            type={isRetailFocused ? "number" : "text"}
+            value={isRetailFocused ? (retailPrice === 0 ? '' : retailPrice) : `${retailPrice.toFixed(2)}`}
             onChange={handleRetailPriceChange}
+            onFocus={() => setIsRetailFocused(true)}
+            onBlur={() => setIsRetailFocused(false)}
             step="0.01"
             min="0"
             placeholder="0,00"
@@ -83,9 +87,11 @@ const ProductPriceCalculator = ({
         </label>
         <div className="relative mt-1.5">
           <Input
-            type="number"
-            value={wholesalePrice}
+            type={isWholesaleFocused ? "number" : "text"}
+            value={isWholesaleFocused ? (wholesalePrice === 0 ? '' : wholesalePrice) : `${wholesalePrice.toFixed(2)}`}
             onChange={handleWholesalePriceChange}
+            onFocus={() => setIsWholesaleFocused(true)}
+            onBlur={() => setIsWholesaleFocused(false)}
             step="0.01"
             min="0"
             placeholder="0,00"
