@@ -28,7 +28,7 @@ const Login = () => {
       <div className="absolute top-4 right-4">
         <ThemeToggle />
       </div>
-      <div className="w-full max-w-md mx-auto">
+      <div className="w-full max-w-md">
         <Card className="w-full">
           <CardHeader className="space-y-2">
             <div className="flex items-center justify-center mb-6">

@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -10,6 +9,8 @@ import Login from "./pages/Login";
 import MainLayout from "./layouts/MainLayout";
 import Dashboard from "./pages/Dashboard";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import ProductsPage from "./pages/catalog/ProductsPage";
+import ProductForm from "./pages/catalog/ProductForm";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -28,8 +29,9 @@ function App() {
                 <Route path="/" element={<Navigate to="/login" replace />} />
                 <Route path="/dashboard" element={<MainLayout />}>
                   <Route index element={<Dashboard />} />
-                  {/* Add your routes here based on the structure */}
-                  {/* This is just a placeholder for the main dashboard */}
+                  <Route path="/catalog/produtos" element={<ProductsPage />} />
+                  <Route path="/catalog/produtos/novo" element={<ProductForm />} />
+                  <Route path="/catalog/produtos/editar/:id" element={<ProductForm />} />
                 </Route>
                 <Route path="*" element={<NotFound />} />
               </Routes>
