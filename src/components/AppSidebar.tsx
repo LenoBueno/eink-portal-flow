@@ -151,8 +151,8 @@ const AppSidebar = () => {
             <AvatarFallback>JD</AvatarFallback>
           </Avatar>
           <div className="flex flex-col">
-            <span className="text-xs text-muted-foreground">ENGLISH (UNITED)</span>
-            <span className="font-semibold text-sm">Jackson Smith</span>
+            <span className="text-xs text-muted-foreground">PORTUGUÊS (BRASIL)</span>
+            <span className="font-semibold text-sm">Lenoir Bueno</span>
           </div>
         </div>
       </SidebarHeader>
@@ -186,7 +186,7 @@ const AppSidebar = () => {
           </SidebarGroup>
         ))}
       </SidebarContent>
-      <SidebarFooter className="mt-auto p-4 border-t">
+      <SidebarFooter className="mt-auto p-4">
         {/* Footer content removed as requested */}
       </SidebarFooter>
     </Sidebar>

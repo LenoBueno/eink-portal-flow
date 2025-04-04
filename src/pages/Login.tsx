@@ -49,10 +49,11 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 font-quicksand">
-      <div className="absolute top-4 right-4">
+    <div className="min-h-screen grid place-items-center p-6 font-quicksand bg-background">
+      <div className="fixed top-4 right-4">
         <ThemeToggle />
       </div>
+      <Card className="w-full max-w-md shadow-lg dark:bg-[#1E1E1E] transition-all">
       <Card className="w-full max-w-sm">
         <CardHeader className="space-y-2">
           <div className="flex items-center justify-center mb-6">
@@ -92,16 +93,17 @@ const Login = () => {
               />
             </div>
           </CardContent>
-          <CardFooter className="flex flex-col">
+          <CardFooter className="flex flex-col gap-4">
             <Button
               type="submit"
+              className="w-full bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200"
               className="w-full bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200"
               disabled={isLoading}
             >
               {isLoading ? "Entrando..." : "Entrar"}
             </Button>
-            <div className="mt-4 text-center text-sm">
-              <a href="#" className="text-gray-500 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white">
+            <div className="text-center text-sm">
+              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors no-underline hover:underline">
                 Esqueceu sua senha?
               </a>
             </div>
