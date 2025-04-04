@@ -508,12 +508,12 @@ const ClientForm = () => {
               </div>
 
               {/* CARACTERÍSTICAS */}
-              <div className="mt-6 pt-6 border-t">
-                <h3 className="text-lg font-medium mb-4">CARACTERÍSTICAS</h3>
+              <div className="mt-6 pt-6 border-t space-y-4">
+                <h3 className="text-lg font-medium">CARACTERÍSTICAS</h3>
                 
-                {/* Abas de Características */}
-                <div className="mb-4">
-                  <div className="flex border-b-0">
+                {/* Abas de Características - Implementando navegação entre abas */}
+                <div className="border-b mb-6">
+                  <div className="flex overflow-x-auto">
                     <button 
                       onClick={() => {
                         document.getElementById('enderecos-content')?.classList.remove('hidden');
@@ -523,7 +523,7 @@ const ClientForm = () => {
                         document.getElementById('credito-content')?.classList.add('hidden');
                         document.getElementById('historico-content')?.classList.add('hidden');
                       }} 
-                      className="px-4 py-2 bg-green-600 text-white"
+                      className="px-4 py-2 bg-green-500 text-white font-medium"
                     >
                       ENDEREÇOS
                     </button>
@@ -536,7 +536,7 @@ const ClientForm = () => {
                         document.getElementById('credito-content')?.classList.add('hidden');
                         document.getElementById('historico-content')?.classList.add('hidden');
                       }} 
-                      className="px-4 py-2 bg-teal-700 text-white"
+                      className="px-4 py-2 bg-teal-600 text-white font-medium"
                     >
                       CONTATOS
                     </button>
@@ -549,7 +549,7 @@ const ClientForm = () => {
                         document.getElementById('credito-content')?.classList.add('hidden');
                         document.getElementById('historico-content')?.classList.add('hidden');
                       }} 
-                      className="px-4 py-2 bg-teal-700 text-white"
+                      className="px-4 py-2 bg-teal-600 text-white font-medium"
                     >
                       DADOS BANCÁRIOS
                     </button>
@@ -562,7 +562,7 @@ const ClientForm = () => {
                         document.getElementById('credito-content')?.classList.add('hidden');
                         document.getElementById('historico-content')?.classList.add('hidden');
                       }} 
-                      className="px-4 py-2 bg-teal-700 text-white"
+                      className="px-4 py-2 bg-teal-600 text-white font-medium"
                     >
                       DOCUMENTOS
                     </button>
@@ -575,7 +575,7 @@ const ClientForm = () => {
                         document.getElementById('credito-content')?.classList.remove('hidden');
                         document.getElementById('historico-content')?.classList.add('hidden');
                       }} 
-                      className="px-4 py-2 bg-teal-700 text-white"
+                      className="px-4 py-2 bg-teal-600 text-white font-medium"
                     >
                       CRÉDITO
                     </button>
@@ -588,7 +588,7 @@ const ClientForm = () => {
                         document.getElementById('credito-content')?.classList.add('hidden');
                         document.getElementById('historico-content')?.classList.remove('hidden');
                       }} 
-                      className="px-4 py-2 bg-teal-700 text-white"
+                      className="px-4 py-2 bg-teal-600 text-white font-medium"
                     >
                       HISTÓRICO
                     </button>
@@ -596,167 +596,300 @@ const ClientForm = () => {
                 </div>
                 
                 {/* Endereços */}
-                <div id="enderecos-content" className="border border-gray-300 bg-gray-50">
-                  <div className="p-2">
-                    <div className="flex flex-wrap -mx-2">
-                      <div className="px-2 w-24 mb-2">
-                        <div className="flex items-center">
-                          <span className="text-sm">CEP</span>
-                          <div className="ml-1 w-4 h-4 rounded-full bg-gray-500 text-white flex items-center justify-center text-xs">?</div>
+                <div id="enderecos-content" className="mb-6">
+                  <div className="grid grid-cols-12 gap-2 mb-2">
+                    <div className="col-span-2">
+                      <div className="flex items-center">
+                        <Label>CEP</Label>
+                        <div className="ml-1 w-4 h-4 rounded-full bg-gray-500 text-white flex items-center justify-center text-xs">?</div>
+                      </div>
+                      <div className="flex">
+                        <Input placeholder="00000-000" className="rounded-r-none" />
+                        <Button className="rounded-l-none bg-gray-300 hover:bg-gray-400 px-2">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    <div className="col-span-5">
+                      <div className="flex justify-between">
+                        <Label>Endereço</Label>
+                        <div className="flex items-center gap-1">
+                          <input type="checkbox" id="isForeign" className="h-4 w-4" />
+                          <Label htmlFor="isForeign" className="text-xs cursor-pointer">no exterior</Label>
                         </div>
-                        <div className="flex">
-                          <Input placeholder="00000-000" className="h-8 text-sm rounded-none" />
-                          <button className="px-2 bg-gray-300 border border-gray-400 border-l-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                          </button>
-                        </div>
                       </div>
-                      
-                      <div className="px-2 flex-1 mb-2">
-                        <div className="flex justify-between">
-                          <span className="text-sm">Endereço</span>
-                          <div className="flex items-center">
-                            <input type="checkbox" id="isForeign" className="h-4 w-4" />
-                            <label htmlFor="isForeign" className="text-xs ml-1">no exterior</label>
-                          </div>
-                        </div>
-                        <Input placeholder="Rua, Avenida, etc" className="h-8 text-sm rounded-none" />
-                      </div>
-                      
-                      <div className="px-2 w-16 mb-2">
-                        <span className="text-sm">Nº</span>
-                        <Input placeholder="123" className="h-8 text-sm rounded-none" />
-                      </div>
-                      
-                      <div className="px-2 w-60 mb-2">
-                        <span className="text-sm">Complemento</span>
-                        <Input placeholder="Apto, Bloco, etc" className="h-8 text-sm rounded-none" />
-                      </div>
-                      
-                      <div className="px-2 w-48 mb-2">
-                        <span className="text-sm">Bairro</span>
-                        <Input placeholder="Bairro" className="h-8 text-sm rounded-none" />
-                      </div>
-                      
-                      <div className="w-full flex justify-end px-2">
-                        <button className="px-4 py-1 bg-teal-600 text-white text-sm">OK</button>
-                      </div>
+                      <Input placeholder="Rua, Avenida, etc" />
+                    </div>
+                    
+                    <div className="col-span-1">
+                      <Label>Nº</Label>
+                      <Input placeholder="123" />
+                    </div>
+                    
+                    <div className="col-span-2">
+                      <Label>Complemento</Label>
+                      <Input placeholder="Apto, Bloco, etc" />
+                    </div>
+                    
+                    <div className="col-span-2">
+                      <Label>Bairro</Label>
+                      <Input placeholder="Bairro" />
+                    </div>
+                    
+                    <div className="col-span-12 flex justify-end">
+                      <Button className="bg-teal-600 hover:bg-teal-700 text-white">OK</Button>
                     </div>
                   </div>
                   
-                  <div className="text-center py-4 text-orange-600 text-sm font-medium border-t border-gray-300">
+                  <div className="text-center py-4 text-orange-600 font-medium">
                     NENHUM ENDEREÇO INFORMADO PARA ESTE CLIENTE ATÉ O MOMENTO!
                   </div>
                 </div>
                 
                 {/* Contatos */}
-                <div id="contatos-content" className="border border-gray-300 bg-gray-50 hidden">
-                  <div className="flex justify-end p-2 border-b border-gray-300">
-                    <button className="px-2 py-1 bg-black text-white text-xs flex items-center">
-                      <PlusIcon className="h-3 w-3 mr-1" /> Adicionar Contato
-                    </button>
+                <div id="contatos-content" className="mb-6 hidden">
+                  <div className="flex justify-between items-center mb-4">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center gap-1 bg-black hover:bg-black/90 text-white ml-auto"
+                      onClick={() => {/* Adicionar contato */}}
+                    >
+                      <PlusIcon className="h-4 w-4" /> Adicionar Contato
+                    </Button>
                   </div>
                   
-                  <div className="text-center py-4 text-orange-600 text-sm font-medium">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div className="space-y-2">
+                      <Label>Nome</Label>
+                      <Input placeholder="Nome do contato" />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label>Cargo</Label>
+                      <Input placeholder="Cargo" />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label>Telefone</Label>
+                      <Input placeholder="(00) 0000-0000" />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label>E-mail</Label>
+                      <Input placeholder="email@exemplo.com" />
+                    </div>
+                  </div>
+                  
+                  <div className="text-center py-4 text-orange-600 font-medium">
                     NENHUM CONTATO INFORMADO PARA ESTE CLIENTE ATÉ O MOMENTO!
                   </div>
                 </div>
                 
                 {/* Dados Bancários */}
-                <div id="dadosBancarios-content" className="border border-gray-300 bg-gray-50 hidden">
-                  <div className="flex justify-end p-2 border-b border-gray-300">
-                    <button className="px-2 py-1 bg-black text-white text-xs flex items-center">
-                      <PlusIcon className="h-3 w-3 mr-1" /> Adicionar Conta
-                    </button>
+                <div id="dadosBancarios-content" className="mb-6 hidden">
+                  <div className="flex justify-between items-center mb-4">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center gap-1 bg-black hover:bg-black/90 text-white ml-auto"
+                      onClick={() => {/* Adicionar conta */}}
+                    >
+                      <PlusIcon className="h-4 w-4" /> Adicionar Conta
+                    </Button>
                   </div>
                   
-                  <div className="text-center py-4 text-orange-600 text-sm font-medium">
+                  <div className="grid grid-cols-12 gap-4 mb-4">
+                    <div className="col-span-4 space-y-2">
+                      <Label>Banco</Label>
+                      <Select>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione um banco" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {BANK_OPTIONS.map((bank) => (
+                            <SelectItem key={bank.value} value={bank.value}>{bank.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div className="col-span-3 space-y-2">
+                      <Label>Agência</Label>
+                      <Input placeholder="Agência" />
+                    </div>
+                    
+                    <div className="col-span-1 space-y-2">
+                      <Label>Dígito</Label>
+                      <Input placeholder="X" />
+                    </div>
+                    
+                    <div className="col-span-3 space-y-2">
+                      <Label>Conta</Label>
+                      <Input placeholder="Conta" />
+                    </div>
+                    
+                    <div className="col-span-1 space-y-2">
+                      <Label>Dígito</Label>
+                      <Input placeholder="X" />
+                    </div>
+                  </div>
+                  
+                  <div className="text-center py-4 text-orange-600 font-medium">
                     NENHUM DADO BANCÁRIO INFORMADO PARA ESTE CLIENTE ATÉ O MOMENTO!
                   </div>
                 </div>
                 
                 {/* Documentos */}
-                <div id="documentos-content" className="border border-gray-300 bg-gray-50 hidden">
-                  <div className="flex justify-end p-2 border-b border-gray-300">
-                    <button className="px-2 py-1 bg-black text-white text-xs flex items-center">
-                      <PlusIcon className="h-3 w-3 mr-1" /> Adicionar Documento
-                    </button>
+                <div id="documentos-content" className="mb-6 hidden">
+                  <div className="flex justify-between items-center mb-4">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center gap-1 bg-black hover:bg-black/90 text-white ml-auto"
+                      onClick={() => {/* Adicionar documento */}}
+                    >
+                      <PlusIcon className="h-4 w-4" /> Adicionar Documento
+                    </Button>
                   </div>
                   
-                  <div className="text-center py-4 text-orange-600 text-sm font-medium">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div className="space-y-2">
+                      <Label>Tipo</Label>
+                      <Select>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione um tipo" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="cenae">CENAE</SelectItem>
+                          <SelectItem value="ie">Inscrição Estadual</SelectItem>
+                          <SelectItem value="iest">Inscrição Estadual ST</SelectItem>
+                          <SelectItem value="im">Inscrição Municipal</SelectItem>
+                          <SelectItem value="suframa">SUFRAMA</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div className="md:col-span-2 space-y-2">
+                      <Label>Documento</Label>
+                      <div className="flex gap-2">
+                        <Input placeholder="Selecione um arquivo" readOnly className="flex-1" />
+                        <Button variant="outline" size="icon" className="flex-shrink-0">
+                          <Paperclip className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="text-center py-4 text-orange-600 font-medium">
                     NENHUM DOCUMENTO INFORMADO PARA ESTE CLIENTE ATÉ O MOMENTO!
                   </div>
                 </div>
                 
                 {/* Crédito */}
-                <div id="credito-content" className="border border-gray-300 bg-gray-50 hidden">
-                  <div className="p-4">
-                    <div className="grid grid-cols-3 gap-4 mb-4">
-                      <div className="text-center p-2 bg-gray-200 border border-gray-300">
-                        <div className="text-xs mb-1">TOTAL VENCIDAS</div>
-                        <div className="text-sm font-medium">R$ 0,00</div>
+                <div id="credito-content" className="mb-6 hidden">
+                  <div className="bg-background rounded-lg p-4 mb-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                      <div className="text-center p-3 bg-muted rounded-md">
+                        <div className="text-xs text-muted-foreground mb-1">TOTAL VENCIDAS</div>
+                        <div className="font-medium">R$ 0,00</div>
                       </div>
                       
-                      <div className="text-center p-2 bg-gray-200 border border-gray-300">
-                        <div className="text-xs mb-1">TOTAL A VENCER</div>
-                        <div className="text-sm font-medium">R$ 0,00</div>
+                      <div className="text-center p-3 bg-muted rounded-md">
+                        <div className="text-xs text-muted-foreground mb-1">TOTAL A VENCER</div>
+                        <div className="font-medium">R$ 0,00</div>
                       </div>
                       
-                      <div className="text-center p-2 bg-gray-200 border border-gray-300">
-                        <div className="text-xs mb-1">TOTAL PAGAS</div>
-                        <div className="text-sm font-medium">R$ 0,00</div>
+                      <div className="text-center p-3 bg-muted rounded-md">
+                        <div className="text-xs text-muted-foreground mb-1">TOTAL PAGAS</div>
+                        <div className="font-medium">R$ 0,00</div>
                       </div>
                     </div>
                     
                     <div className="text-center mb-4">
-                      <div className="text-xs">PARCELAS DO CLIENTE</div>
+                      <div className="text-xs text-muted-foreground">PARCELAS DO CLIENTE</div>
                     </div>
                     
                     <div className="grid grid-cols-3 gap-4 mb-4">
                       <div className="flex flex-col items-center">
-                        <div className="w-8 h-8 bg-green-500 mb-2"></div>
+                        <div className="w-10 h-10 bg-green-500 rounded-md mb-2"></div>
                         <div className="text-xs">VENCIDAS</div>
                       </div>
                       
                       <div className="flex flex-col items-center">
-                        <div className="w-8 h-8 bg-gray-400 mb-2"></div>
+                        <div className="w-10 h-10 bg-gray-400 rounded-md mb-2"></div>
                         <div className="text-xs">A VENCER</div>
                       </div>
                       
                       <div className="flex flex-col items-center">
-                        <div className="w-8 h-8 bg-gray-300 mb-2"></div>
+                        <div className="w-10 h-10 bg-gray-300 rounded-md mb-2"></div>
                         <div className="text-xs">PAGAS/RECEBIDAS</div>
                       </div>
                     </div>
                     
-                    <div className="grid grid-cols-3 gap-4">
-                      <div className="text-center p-2 bg-gray-200 border border-gray-300">
-                        <div className="text-xs mb-1">LIMITE DE CRÉDITO</div>
-                        <div className="text-sm font-medium">R$ {(client.creditLimit || 0).toFixed(2)}</div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="text-center p-3 bg-muted rounded-md">
+                        <div className="text-xs text-muted-foreground mb-1">LIMITE DE CRÉDITO</div>
+                        <div className="font-medium">R$ {(client.creditLimit || 0).toFixed(2)}</div>
                       </div>
                       
-                      <div className="text-center p-2 bg-gray-200 border border-gray-300">
-                        <div className="text-xs mb-1">LIMITE UTILIZADO</div>
-                        <div className="text-sm font-medium">R$ 0,00</div>
+                      <div className="text-center p-3 bg-muted rounded-md">
+                        <div className="text-xs text-muted-foreground mb-1">LIMITE UTILIZADO</div>
+                        <div className="font-medium">R$ 0,00</div>
                       </div>
                       
-                      <div className="text-center p-2 bg-gray-200 border border-gray-300">
-                        <div className="text-xs mb-1">LIMITE DISPONÍVEL</div>
-                        <div className="text-sm font-medium">R$ {(client.creditLimit || 0).toFixed(2)}</div>
+                      <div className="text-center p-3 bg-muted rounded-md">
+                        <div className="text-xs text-muted-foreground mb-1">LIMITE DISPONÍVEL</div>
+                        <div className="font-medium">R$ {(client.creditLimit || 0).toFixed(2)}</div>
                       </div>
                     </div>
                   </div>
                 </div>
                 
                 {/* Histórico */}
-                <div id="historico-content" className="border border-gray-300 bg-gray-50 hidden">
-                  <div className="flex justify-end p-2 border-b border-gray-300">
-                    <button className="px-2 py-1 bg-black text-white text-xs flex items-center">
-                      <PlusIcon className="h-3 w-3 mr-1" /> Adicionar Histórico
-                    </button>
+                <div id="historico-content" className="mb-6 hidden">
+                  <div className="flex justify-between items-center mb-4">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center gap-1 bg-black hover:bg-black/90 text-white ml-auto"
+                      onClick={() => {/* Adicionar histórico */}}
+                    >
+                      <PlusIcon className="h-4 w-4" /> Adicionar Histórico
+                    </Button>
                   </div>
                   
-                  <div className="text-center py-4 text-orange-600 text-sm font-medium">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div className="space-y-2">
+                      <Label>Data</Label>
+                      <Input type="date" />
+                    </div>
+                    
+                    <div className="md:col-span-2 space-y-2">
+                      <Label>Descrição</Label>
+                      <Textarea placeholder="Descrição" rows={2} />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label>Status</Label>
+                      <Select>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione um status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="pending">Pendente</SelectItem>
+                          <SelectItem value="completed">Concluído</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  
+                  <div className="text-center py-4 text-orange-600 font-medium">
                     NENHUM HISTÓRICO INFORMADO PARA ESTE CLIENTE ATÉ O MOMENTO!
                   </div>
                 </div>
