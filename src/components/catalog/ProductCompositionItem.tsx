@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -32,6 +31,8 @@ const ProductCompositionItem = ({
   onRemove
 }: ProductCompositionItemProps) => {
   const totalCost = quantity * unitCost;
+  const [isQuantityFocused, setIsQuantityFocused] = useState(false);
+  const [isUnitCostFocused, setIsUnitCostFocused] = useState(false);
 
   return (
     <div className="grid grid-cols-12 gap-2 items-center mb-2">
@@ -44,9 +45,11 @@ const ProductCompositionItem = ({
       </div>
       <div className="col-span-2">
         <Input
-          type="number"
-          value={quantity}
-          onChange={(e) => onQuantityChange(Number(e.target.value))}
+          type={isQuantityFocused ? "number" : "text"}
+          value={isQuantityFocused ? (quantity === 0 ? '' : quantity) : quantity.toString()}
+          onChange={(e) => onQuantityChange(e.target.value === '' ? 0 : Number(e.target.value))}
+          onFocus={() => setIsQuantityFocused(true)}
+          onBlur={() => setIsQuantityFocused(false)}
           min="0.01"
           step="0.01"
         />
@@ -66,9 +69,11 @@ const ProductCompositionItem = ({
       <div className="col-span-2">
         <div className="relative">
           <Input
-            type="number"
-            value={unitCost}
-            onChange={(e) => onUnitCostChange(Number(e.target.value))}
+            type={isUnitCostFocused ? "number" : "text"}
+            value={isUnitCostFocused ? (unitCost === 0 ? '' : unitCost) : unitCost.toFixed(2)}
+            onChange={(e) => onUnitCostChange(e.target.value === '' ? 0 : Number(e.target.value))}
+            onFocus={() => setIsUnitCostFocused(true)}
+            onBlur={() => setIsUnitCostFocused(false)}
             min="0"
             step="0.01"
             className="pl-6"
@@ -81,7 +86,7 @@ const ProductCompositionItem = ({
       <div className="col-span-1">
         <div className="relative">
           <Input
-            type="number"
+            type="text"
             value={totalCost.toFixed(2)}
             readOnly
             className="pl-6 bg-gray-50"

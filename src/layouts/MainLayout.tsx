@@ -4,7 +4,7 @@ import {
 } from "@/components/ui/sidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import AppSidebar from "@/components/AppSidebar";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
@@ -12,18 +12,40 @@ import { Bell, HelpCircle, LogOut, Settings } from "lucide-react";
 
 const MainLayout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showShadow, setShowShadow] = useState(false);
   const navigate = useNavigate();
+  const mainRef = useRef<HTMLDivElement>(null);
   
   const handleLogout = () => {
     // Add any logout logic here (clear tokens, etc)
     navigate('/login');
   };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (mainRef.current) {
+        const scrollPosition = mainRef.current.scrollTop;
+        setShowShadow(scrollPosition > 10);
+      }
+    };
+
+    const mainElement = mainRef.current;
+    if (mainElement) {
+      mainElement.addEventListener('scroll', handleScroll);
+    }
+
+    return () => {
+      if (mainElement) {
+        mainElement.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []);
   
   return (
     <div className="min-h-screen flex w-full font-quicksand">
       <AppSidebar />
       <div className="flex-1 flex flex-col min-h-screen">
-        <header className="h-16 flex items-center px-4 bg-background">
+        <header className={`h-16 flex items-center px-4 bg-background sticky top-0 z-10 transition-shadow duration-200 ${showShadow ? 'shadow-md' : ''}`}>
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center">
               <SidebarTrigger />
@@ -68,10 +90,10 @@ const MainLayout = () => {
             </div>
           </div>
         </header>
-        <main className="flex-1 p-6 overflow-auto">
+        <main ref={mainRef} className="flex-1 p-6 overflow-auto">
           <Outlet />
         </main>
-        <footer className="border-t border-border p-4 text-center text-sm text-muted-foreground">
+        <footer className="p-4 text-center text-sm text-muted-foreground">
           © {new Date().getFullYear()} ERP System - All rights reserved
         </footer>
       </div>

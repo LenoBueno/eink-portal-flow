@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { 
@@ -76,6 +75,7 @@ const ProductsPage = () => {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-12">Código</TableHead>
+                <TableHead className="w-14">Img</TableHead>
                 <TableHead>Nome</TableHead>
                 <TableHead>Categoria</TableHead>
                 <TableHead className="w-24">Preço de Venda</TableHead>
@@ -87,7 +87,7 @@ const ProductsPage = () => {
             <TableBody>
               {filteredProducts.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-6 text-gray-500">
+                  <TableCell colSpan={8} className="text-center py-6 text-gray-500">
                     Nenhum produto encontrado
                   </TableCell>
                 </TableRow>
@@ -95,6 +95,15 @@ const ProductsPage = () => {
                 filteredProducts.map((product) => (
                   <TableRow key={product.id}>
                     <TableCell className="font-mono">{product.code}</TableCell>
+                    <TableCell>
+                      <div className="h-10 w-10 rounded-md overflow-hidden">
+                        <img 
+                          src={product.image || "/placeholder.svg"} 
+                          alt={product.name} 
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                    </TableCell>
                     <TableCell className="font-medium">{product.name}</TableCell>
                     <TableCell>{product.category}</TableCell>
                     <TableCell>R$ {product.retailPrice.toFixed(2)}</TableCell>

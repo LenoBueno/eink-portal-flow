@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { 
   PackageIcon, ShoppingCartIcon, LayoutDashboardIcon, 
@@ -18,122 +17,117 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface SidebarItem {
   title: string;
-  icon: React.ElementType;
+  icon?: React.ElementType;
   href: string;
   subItems?: SidebarItem[];
 }
 
 interface SidebarSection {
   title: string;
+  icon?: React.ElementType;
+  href: string;
   items: SidebarItem[];
 }
 
+// Menu reorganizado para eliminar redundâncias
 const sidebarSections: SidebarSection[] = [
   {
-    title: "Menu",
-    items: [
-      {
-        title: "Dashboard",
-        icon: LayoutDashboardIcon,
-        href: "/dashboard",
-      }
-    ],
+    title: "DASHBOARD",
+    icon: LayoutDashboardIcon,
+    href: "/dashboard",
+    items: [],
   },
   {
-    title: "Catálogo",
+    title: "CATÁLOGO",
+    icon: PackageIcon,
+    href: "/dashboard/catalog",
     items: [
       {
         title: "Produtos",
-        icon: PackageIcon,
         href: "/dashboard/catalog/produtos",
       },
       {
         title: "Serviços",
-        icon: StoreIcon,
         href: "/dashboard/catalog/servicos",
       },
       {
         title: "Categorias",
-        icon: Package,
         href: "/dashboard/catalog/categorias",
       },
     ],
   },
   {
-    title: "Compras",
+    title: "COMPRAS",
+    icon: ShoppingCartIcon,
+    href: "/dashboard/compras",
     items: [
       {
         title: "Pedidos/Orçamentos",
-        icon: ShoppingCartIcon,
         href: "/dashboard/compras/pedidos-orcamentos",
         subItems: [
           {
             title: "Em Aberto",
-            icon: ChevronRight,
             href: "/dashboard/compras/em-aberto",
           },
           {
             title: "Devoluções",
-            icon: ChevronRight,
             href: "/dashboard/compras/devolucoes",
           }
         ]
       },
       {
         title: "Fornecedores",
-        icon: Store,
         href: "/dashboard/compras/fornecedores",
       },
     ],
   },
   {
-    title: "Vendas",
+    title: "VENDAS",
+    icon: Users2Icon,
+    href: "/dashboard/vendas",
     items: [
       {
         title: "Pedidos/Orçamentos",
-        icon: ShoppingCartIcon,
         href: "/dashboard/vendas/pedidos-orcamentos",
+        subItems: [
+          {
+            title: "Em Aberto",
+            href: "/dashboard/vendas/em-aberto",
+          },
+          {
+            title: "Devoluções",
+            href: "/dashboard/vendas/devolucoes",
+          }
+        ]
       },
       {
         title: "Clientes",
-        icon: Users2Icon,
         href: "/dashboard/vendas/clientes",
       },
     ],
   },
   {
-    title: "Financeiro",
+    title: "FINANCEIRO",
+    icon: BarChart3Icon,
+    href: "/dashboard/financeiro",
     items: [
       {
         title: "Fluxo de Caixa",
-        icon: BarChart3Icon,
         href: "/dashboard/financeiro/fluxo-caixa",
       },
       {
         title: "Pagamentos",
-        icon: CreditCard,
         href: "/dashboard/financeiro/pagamentos/a-pagar",
       },
       {
         title: "Recebimentos",
-        icon: CreditCard,
         href: "/dashboard/financeiro/recebimentos/a-receber",
-      },
-    ],
-  },
-  {
-    title: "My Account",
-    items: [
-      {
-        title: "Configurações",
-        icon: Settings2Icon,
-        href: "/dashboard/config/empresa/dados-gerais",
       },
     ],
   },
@@ -141,95 +135,176 @@ const sidebarSections: SidebarSection[] = [
 
 const AppSidebar = () => {
   const location = useLocation();
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
+  
+  // Verifica qual seção deve estar aberta com base na URL atual
+  useEffect(() => {
+    const newOpenSections: Record<string, boolean> = {};
+    
+    sidebarSections.forEach(section => {
+      // Verifica se o caminho atual começa com o caminho da seção
+      if (location.pathname.startsWith(section.href)) {
+        newOpenSections[section.title] = true;
+      }
+    });
+    
+    setOpenSections(newOpenSections);
+  }, [location.pathname]);
+
+  const toggleSection = (sectionTitle: string) => {
+    setOpenSections(prev => ({
+      ...prev,
+      [sectionTitle]: !prev[sectionTitle]
+    }));
+  };
   
   return (
     <Sidebar className="border-r">
-      <SidebarHeader className="p-4 flex flex-col items-center">
-        <div className="flex items-center gap-2.5 mb-1">
-          <Avatar className="w-8 h-8">
-            <AvatarImage src="/placeholder.svg" />
-            <AvatarFallback>JD</AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col">
-            <span className="text-xs text-muted-foreground">PORTUGUÊS (BRASIL)</span>
-            <span className="font-semibold text-sm">Lenoir Bueno</span>
+      <SidebarContent className="px-2 py-4">
+        {/* Avatar e informações do usuário alinhados com os ícones */}
+        <SidebarGroup className="mb-4">
+          <div className="flex items-center pl-3 py-2">
+            <Avatar className="w-8 h-8 mr-2">
+              <AvatarImage src="/placeholder.svg" />
+              <AvatarFallback>LB</AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <span className="text-xs text-muted-foreground">PORTUGUÊS (BRASIL)</span>
+              <span className="text-sm font-medium">Lenoir Bueno</span>
+            </div>
           </div>
-        </div>
-      </SidebarHeader>
-      <SidebarContent className="px-2">
+        </SidebarGroup>
+        
         {sidebarSections.map((section) => (
           <SidebarGroup key={section.title} className="mb-4">
-            <SidebarGroupLabel className="text-xs tracking-wider text-muted-foreground ml-2 mb-1">
-              {section.title.toUpperCase()}
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {section.items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    {item.subItems ? (
-                      <CollapsibleSidebarItem item={item} />
+            {section.items.length > 0 ? (
+              <Collapsible 
+                open={openSections[section.title]} 
+                onOpenChange={() => toggleSection(section.title)}
+                className="w-full"
+              >
+                <CollapsibleTrigger asChild>
+                  <button className={`flex items-center justify-between w-full py-2 px-3 text-sm font-medium rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground`}>
+                    <div className="flex items-center">
+                      {section.icon && <section.icon className="mr-2 h-5 w-5" />}
+                      <span>{section.title}</span>
+                    </div>
+                    {openSections[section.title] ? (
+                      <ChevronDown className="h-4 w-4" />
                     ) : (
-                      <SidebarMenuButton 
-                        asChild 
-                        isActive={location.pathname === item.href || location.pathname.startsWith(item.href + "/")}
-                      >
-                        <Link to={item.href} className="flex items-center">
-                          <item.icon className="mr-2 h-5 w-5" />
-                          <span>{item.title}</span>
-                        </Link>
-                      </SidebarMenuButton>
+                      <ChevronRight className="h-4 w-4" />
                     )}
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
+                  </button>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="pl-7 pt-1 space-y-1">
+                  {section.items.map((item) => (
+                    item.subItems ? (
+                      <SubMenu 
+                        key={item.title} 
+                        item={item} 
+                        location={location}
+                      />
+                    ) : (
+                      <Link 
+                        key={item.title}
+                        to={item.href}
+                        className={`flex items-center py-1.5 px-2 text-sm rounded-md ${
+                          (location.pathname === item.href || location.pathname.startsWith(item.href + "/")) 
+                            ? 'bg-sidebar-accent text-sidebar-accent-foreground' 
+                            : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
+                        }`}
+                      >
+                        <span className={(location.pathname === item.href || location.pathname.startsWith(item.href + "/")) ? "" : "text-muted-foreground"}>
+                          {item.title}
+                        </span>
+                      </Link>
+                    )
+                  ))}
+                </CollapsibleContent>
+              </Collapsible>
+            ) : (
+              // Para o Dashboard (sem submenus)
+              <Link 
+                to={section.href} 
+                className={`flex items-center justify-between w-full py-2 px-3 text-sm font-medium rounded-md ${
+                  (location.pathname === section.href || location.pathname === section.href + "/") 
+                    ? 'bg-sidebar-accent text-sidebar-accent-foreground' 
+                    : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
+                }`}
+              >
+                <div className="flex items-center">
+                  {section.icon && <section.icon className="mr-2 h-5 w-5" />}
+                  <span>{section.title}</span>
+                </div>
+              </Link>
+            )}
           </SidebarGroup>
         ))}
       </SidebarContent>
       <SidebarFooter className="mt-auto p-4">
-        {/* Footer content removed as requested */}
+        <div className="text-center text-xs text-muted-foreground">
+          eink-portal © 2024
+        </div>
       </SidebarFooter>
     </Sidebar>
   );
 };
 
-interface CollapsibleSidebarItemProps {
+interface SubMenuProps {
   item: SidebarItem;
+  location: ReturnType<typeof useLocation>;
 }
 
-const CollapsibleSidebarItem: React.FC<CollapsibleSidebarItemProps> = ({ item }) => {
+const SubMenu: React.FC<SubMenuProps> = ({ item, location }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation();
+  
+  useEffect(() => {
+    if (item.subItems?.some(subItem => 
+      location.pathname === subItem.href || 
+      location.pathname.startsWith(subItem.href + "/")
+    )) {
+      setIsOpen(true);
+    }
+  }, [location.pathname, item.subItems]);
   
   const isActive = item.subItems?.some(
     subItem => location.pathname === subItem.href || location.pathname.startsWith(subItem.href + "/")
   ) || location.pathname === item.href;
   
   return (
-    <Collapsible open={isOpen} onOpenChange={setIsOpen} className="w-full">
+    <Collapsible 
+      open={isOpen} 
+      onOpenChange={setIsOpen} 
+      className="w-full"
+    >
       <CollapsibleTrigger asChild>
-        <button className={`flex items-center justify-between w-full py-2 px-3 text-sm rounded-md ${isActive ? 'bg-sidebar-accent text-sidebar-accent-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}>
-          <div className="flex items-center">
-            <item.icon className="mr-2 h-5 w-5" />
-            <span>{item.title}</span>
-          </div>
+        <button className={`flex items-center justify-between w-full py-1.5 px-2 text-sm rounded-md ${
+          isActive ? 'bg-sidebar-accent text-sidebar-accent-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
+        }`}>
+          <span className={isActive ? "" : "text-muted-foreground"}>
+            {item.title}
+          </span>
           {isOpen ? (
-            <ChevronDown className="h-4 w-4" />
+            <ChevronDown className="h-3 w-3 ml-2" />
           ) : (
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="h-3 w-3 ml-2" />
           )}
         </button>
       </CollapsibleTrigger>
-      <CollapsibleContent className="pl-8 pt-1 space-y-1">
+      <CollapsibleContent className="pl-4 pt-1 space-y-1">
         {item.subItems?.map((subItem) => {
           const isSubActive = location.pathname === subItem.href || location.pathname.startsWith(subItem.href + "/");
           return (
             <Link 
               key={subItem.title}
               to={subItem.href}
-              className={`flex items-center py-1.5 px-2 text-sm rounded-md ${isSubActive ? 'bg-sidebar-accent text-sidebar-accent-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
+              className={`flex items-center py-1.5 px-2 text-sm rounded-md ${
+                isSubActive ? 'bg-sidebar-accent text-sidebar-accent-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
+              }`}
             >
-              <span className={isSubActive ? "" : "text-muted-foreground"}>{subItem.title}</span>
+              <span className={isSubActive ? "" : "text-muted-foreground"}>
+                {subItem.title}
+              </span>
             </Link>
           );
         })}
