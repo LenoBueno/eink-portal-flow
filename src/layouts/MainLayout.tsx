@@ -49,7 +49,7 @@ const MainLayout = () => {
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center">
               <SidebarTrigger />
-              <h1 className="text-xl font-medium ml-2">ERP System</h1>
+              <h1 className="text-xl font-medium ml-2">2103 ERP System</h1>
             </div>
             <div className="flex items-center gap-3">
               <Button variant="ghost" size="icon" className="rounded-full">
@@ -71,15 +71,15 @@ const MainLayout = () => {
                 <DropdownMenuTrigger asChild>
                   <Avatar className="w-8 h-8 cursor-pointer">
                     <AvatarImage src="/placeholder.svg" />
-                    <AvatarFallback>JS</AvatarFallback>
+                    <AvatarFallback>LB</AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="end">
-                  <DropdownMenuLabel>Jackson Smith</DropdownMenuLabel>
+                  <DropdownMenuLabel>Lenoir Bueno</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate('/dashboard/settings')}>
                     <Settings className="mr-2 h-4 w-4" />
-                    <span>Settings</span>
+                    <span>Configurações</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleLogout}>
                     <LogOut className="mr-2 h-4 w-4 text-destructive" />
@@ -94,7 +94,7 @@ const MainLayout = () => {
           <Outlet />
         </main>
         <footer className="p-4 text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} ERP System - All rights reserved
+          © {new Date().getFullYear()} 2103 - Todos os direitos reservados
         </footer>
       </div>
     </div>

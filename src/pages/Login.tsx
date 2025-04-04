@@ -1,8 +1,6 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { toast } from "@/hooks/use-toast";
@@ -49,65 +47,77 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen grid place-items-center p-6 font-quicksand bg-background">
+    <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="fixed top-4 right-4">
         <ThemeToggle />
       </div>
-      <Card className="w-full max-w-md shadow-lg dark:bg-[#1E1E1E] transition-all">
-        <CardHeader className="space-y-2">
-          <div className="flex items-center justify-center mb-6">
-            <div className="bg-black dark:bg-white rounded-full p-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white dark:text-black">
-                <path d="M2 9V5c0-1.1.9-2 2-2h4m10 2h4c1.1 0 2 .9 2 2v4m-10 10h-4c-1.1 0-2-.9-2-2v-4"></path>
-              </svg>
-            </div>
+      
+      <div className="w-full max-w-md border rounded-lg shadow-sm bg-card">
+        <div className="flex flex-col items-center p-6">
+          <div className="bg-black dark:bg-black rounded-full p-4 mb-4">
+            <svg 
+              xmlns="http://www.w3.org/2000/svg"
+              width="24" 
+              height="24" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="white" 
+              strokeWidth="2" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            >
+              <path d="M2 9V5c0-1.1.9-2 2-2h4m10 2h4c1.1 0 2 .9 2 2v4m-10 10h-4c-1.1 0-2-.9-2-2v-4"></path>
+            </svg>
           </div>
-          <CardTitle className="text-2xl font-bold text-center">Login</CardTitle>
-          <CardDescription className="text-center">
+          
+          <h2 className="text-2xl font-bold mb-1">Login</h2>
+          <p className="text-sm text-muted-foreground mb-6">
             Entre com suas credenciais para acessar o sistema
-          </CardDescription>
-        </CardHeader>
-        <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium">Email</label>
+          </p>
+          
+          <form onSubmit={handleSubmit} className="w-full space-y-4">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium mb-1">Email</label>
               <Input
                 id="email"
                 type="email"
                 placeholder="seuemail@empresa.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                className="w-full"
                 required
               />
             </div>
-            <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium">Senha</label>
+            
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium mb-1">Senha</label>
               <Input
                 id="password"
                 type="password"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                className="w-full"
                 required
               />
             </div>
-          </CardContent>
-          <CardFooter className="flex flex-col gap-4">
+            
             <Button
               type="submit"
-              className="w-full bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200"
+              className="w-full bg-black text-white hover:bg-gray-800 dark:bg-black dark:text-white dark:hover:bg-gray-800"
               disabled={isLoading}
             >
               {isLoading ? "Entrando..." : "Entrar"}
             </Button>
+            
             <div className="text-center text-sm">
-              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors no-underline hover:underline">
+              <a href="#" className="text-muted-foreground hover:underline">
                 Esqueceu sua senha?
               </a>
             </div>
-          </CardFooter>
-        </form>
-      </Card>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };
