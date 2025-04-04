@@ -52,14 +52,6 @@ const sidebarSections: SidebarSection[] = [
         title: "Produtos",
         href: "/dashboard/catalog/produtos",
       },
-      {
-        title: "Serviços",
-        href: "/dashboard/catalog/servicos",
-      },
-      {
-        title: "Categorias",
-        href: "/dashboard/catalog/categorias",
-      },
     ],
   },
   {

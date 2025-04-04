@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { 
   Command, 
   CommandEmpty, 
@@ -15,19 +14,22 @@ import { useDebounce } from "@/hooks/useDebounce";
 
 interface NCMComboboxProps {
   value: string;
-  onChange: (value: string) => void;
+  onChange: (value: string, description?: string) => void;
   disabled?: boolean;
+  placeholder?: string;
 }
 
 interface NCMOption {
   value: string;
   label: string;
+  description: string;
 }
 
 const NCMCombobox: React.FC<NCMComboboxProps> = ({ 
   value, 
   onChange,
-  disabled = false 
+  disabled = false,
+  placeholder = "Digite o código ou descrição do NCM..."
 }) => {
   const [inputValue, setInputValue] = useState("");
   const [showResults, setShowResults] = useState(false);
@@ -35,13 +37,14 @@ const NCMCombobox: React.FC<NCMComboboxProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   
-  const debouncedSearchTerm = useDebounce(inputValue, 500);
+  const debouncedSearchTerm = useDebounce(inputValue, 300);
 
   // Função para formatar os resultados da API em opções para o combobox
   const formatResults = useCallback((results: NCMItem[]): NCMOption[] => {
     return results.map(item => ({
       value: item.codigo,
-      label: `${item.codigo} - ${item.descricao}`
+      label: `${item.codigo} - ${item.descricao}`,
+      description: item.descricao
     }));
   }, []);
 
@@ -108,7 +111,7 @@ const NCMCombobox: React.FC<NCMComboboxProps> = ({
 
   // Função para selecionar um item
   const handleSelectItem = (selectedOption: NCMOption) => {
-    onChange(selectedOption.value);
+    onChange(selectedOption.value, selectedOption.description);
     setInputValue(selectedOption.label);
     setShowResults(false);
   };
@@ -120,7 +123,14 @@ const NCMCombobox: React.FC<NCMComboboxProps> = ({
     
     // Se o input ficar vazio, limpa o valor selecionado
     if (!newValue.trim()) {
-      onChange("");
+      onChange("", "");
+    }
+    
+    // Mostra os resultados se o input tiver pelo menos 3 caracteres
+    if (newValue.length >= 3) {
+      setShowResults(true);
+    } else {
+      setShowResults(false);
     }
   };
 
@@ -137,20 +147,27 @@ const NCMCombobox: React.FC<NCMComboboxProps> = ({
         value={inputValue}
         onChange={handleInputChange}
         onFocus={handleInputFocus}
-        placeholder="Digite o código ou descrição do NCM..."
+        placeholder={placeholder}
         disabled={disabled}
         className={cn(isLoading && "opacity-70")}
       />
+      
+      {isLoading && (
+        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+          <div className="animate-spin h-4 w-4 border-2 border-primary border-opacity-50 border-t-primary rounded-full"></div>
+        </div>
+      )}
       
       {showResults && options.length > 0 && (
         <div className="absolute w-full z-50 mt-1 max-h-60 overflow-auto rounded-md border bg-popover p-1 shadow-md">
           {options.map((option) => (
             <div
               key={option.value}
-              className="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[selected='true']:bg-accent"
+              className="relative flex flex-col cursor-default select-none items-start rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[selected='true']:bg-accent"
               onClick={() => handleSelectItem(option)}
             >
-              {option.label}
+              <div className="font-medium">{option.value}</div>
+              <div className="text-xs text-muted-foreground">{option.description}</div>
             </div>
           ))}
         </div>

@@ -17,7 +17,7 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { InboxIcon, BarcodeIcon, SaveIcon, PlusIcon } from "lucide-react";
+import { InboxIcon, BarcodeIcon, SaveIcon, PlusIcon, PlusCircle } from "lucide-react";
 import { 
   Product, 
   ProductCompositionItem,
@@ -50,6 +50,10 @@ const ProductForm = () => {
   const [subcategories, setSubcategories] = useState<string[]>([]);
   const [isCostPriceFocused, setIsCostPriceFocused] = useState(false);
   const [isWholesaleQtyFocused, setIsWholesaleQtyFocused] = useState(false);
+  const [isAddingCategory, setIsAddingCategory] = useState(false);
+  const [isAddingSubcategory, setIsAddingSubcategory] = useState(false);
+  const [newCategory, setNewCategory] = useState("");
+  const [newSubcategory, setNewSubcategory] = useState("");
 
   const [product, setProduct] = useState<Product>({
     id: "",
@@ -59,7 +63,7 @@ const ProductForm = () => {
     description: "",
     productType: PRODUCT_TYPES[0],
     unit: UNITS[0],
-    category: "",
+    category: CATEGORIES[0] || "",
     subcategory: "",
     internalCode: "",
     image: "/placeholder.svg",
@@ -100,18 +104,55 @@ const ProductForm = () => {
   }, [id]);
 
   useEffect(() => {
+    if (!id && !selectedCategory && CATEGORIES.length > 0) {
+      const initialCategory = CATEGORIES[0];
+      setSelectedCategory(initialCategory);
+      
+      const initialSubcategories = SUBCATEGORIES[initialCategory as keyof typeof SUBCATEGORIES] || [];
+      setSubcategories(initialSubcategories);
+      
+      if (initialSubcategories.length > 0 && !product.subcategory) {
+        setProduct(prev => ({
+          ...prev,
+          category: initialCategory,
+          subcategory: initialSubcategories[0]
+        }));
+      }
+    }
+  }, [id, selectedCategory, product.subcategory]);
+
+  useEffect(() => {
     if (selectedCategory) {
       const categorySubcategories = SUBCATEGORIES[selectedCategory as keyof typeof SUBCATEGORIES] || [];
       setSubcategories(categorySubcategories);
       
-      if (!categorySubcategories.includes(product.subcategory)) {
+      if (categorySubcategories.length > 0) {
+        if (!categorySubcategories.includes(product.subcategory)) {
+          setProduct(prev => ({
+            ...prev,
+            subcategory: categorySubcategories[0]
+          }));
+        }
+      } else {
         setProduct(prev => ({
           ...prev,
-          subcategory: categorySubcategories[0] || ""
+          subcategory: ""
         }));
       }
+    } else {
+      setSubcategories([]);
+      setProduct(prev => ({
+        ...prev,
+        subcategory: ""
+      }));
     }
   }, [selectedCategory, product.subcategory]);
+
+  useEffect(() => {
+    if (product.category && !selectedCategory) {
+      setSelectedCategory(product.category);
+    }
+  }, [product.category, selectedCategory]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -132,11 +173,29 @@ const ProductForm = () => {
   const handleSelectChange = (name: string, value: string) => {
     if (name === "category") {
       setSelectedCategory(value);
+      
+      const categorySubcategories = SUBCATEGORIES[value as keyof typeof SUBCATEGORIES] || [];
+      
+      setSubcategories(categorySubcategories);
+      
+      setProduct(prev => ({
+        ...prev,
+        category: value,
+        subcategory: categorySubcategories.length > 0 ? categorySubcategories[0] : ""
+      }));
+    } else {
+      setProduct(prev => ({
+        ...prev,
+        [name]: value
+      }));
     }
-    
+  };
+
+  const handleNcmChange = (value: string, description?: string) => {
     setProduct(prev => ({
       ...prev,
-      [name]: value
+      ncm: value,
+      ncmDescription: description || ""
     }));
   };
 
@@ -236,6 +295,33 @@ const ProductForm = () => {
     }
   };
 
+  const handleAddNewCategory = () => {
+    if (newCategory.trim()) {
+      const updatedCategories = [...CATEGORIES, newCategory.trim()];
+      setSelectedCategory(newCategory.trim());
+      setProduct(prev => ({
+        ...prev,
+        category: newCategory.trim()
+      }));
+      setNewCategory("");
+      setIsAddingCategory(false);
+    }
+  };
+
+  const handleAddNewSubcategory = () => {
+    if (newSubcategory.trim() && selectedCategory) {
+      const updatedSubcategories = [...subcategories, newSubcategory.trim()];
+      setSubcategories(updatedSubcategories);
+      setProduct(prev => ({
+        ...prev,
+        subcategory: newSubcategory.trim()
+      }));
+      console.log(`Nova subcategoria "${newSubcategory.trim()}" adicionada à categoria "${selectedCategory}"`);
+      setNewSubcategory("");
+      setIsAddingSubcategory(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -243,7 +329,7 @@ const ProductForm = () => {
         <span className="ml-2">Carregando...</span>
       </div>
     );
-  }
+  } 
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -386,37 +472,118 @@ const ProductForm = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="category">Categoria</Label>
-                    <Select 
-                      value={product.category}
-                      onValueChange={(value) => handleSelectChange("category", value)}
-                    >
-                      <SelectTrigger id="category">
-                        <SelectValue placeholder="Selecione" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {CATEGORIES.map((category) => (
-                          <SelectItem key={category} value={category}>{category}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <div className="flex items-center">
+                      <Label htmlFor="category">Categoria</Label>
+                      <button 
+                        type="button"
+                        onClick={() => setIsAddingCategory(true)}
+                        className="ml-2 text-primary hover:text-primary/80"
+                      >
+                        <PlusCircle className="h-5 w-5" />
+                      </button>
+                    </div>
+                    
+                    {isAddingCategory ? (
+                      <div className="flex gap-2">
+                        <Input
+                          value={newCategory}
+                          onChange={(e) => setNewCategory(e.target.value)}
+                          placeholder="Nova categoria"
+                          className="flex-1"
+                        />
+                        <Button 
+                          type="button" 
+                          onClick={handleAddNewCategory}
+                          variant="outline"
+                          size="icon"
+                          className="bg-black hover:bg-black/90 text-white"
+                        >
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          type="button" 
+                          onClick={() => setIsAddingCategory(false)}
+                          variant="outline"
+                          size="icon"
+                          className="text-destructive"
+                        >
+                          <span className="sr-only">Cancelar</span>
+                          ✕
+                        </Button>
+                      </div>
+                    ) : (
+                      <Select 
+                        value={product.category}
+                        onValueChange={(value) => handleSelectChange("category", value)}
+                      >
+                        <SelectTrigger id="category">
+                          <SelectValue placeholder="Selecione" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {CATEGORIES.map((category) => (
+                            <SelectItem key={category} value={category}>{category}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="subcategory">Subcategoria</Label>
-                    <Select 
-                      value={product.subcategory}
-                      onValueChange={(value) => handleSelectChange("subcategory", value)}
-                      disabled={!selectedCategory}
-                    >
-                      <SelectTrigger id="subcategory">
-                        <SelectValue placeholder={selectedCategory ? "Selecione" : "Selecione uma categoria"} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {subcategories.map((subcategory) => (
-                          <SelectItem key={subcategory} value={subcategory}>{subcategory}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <div className="flex items-center">
+                      <Label htmlFor="subcategory">Subcategoria</Label>
+                      <button 
+                        type="button"
+                        onClick={() => selectedCategory && setIsAddingSubcategory(true)}
+                        className={`ml-2 text-primary hover:text-primary/80 ${!selectedCategory ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        disabled={!selectedCategory}
+                      >
+                        <PlusCircle className="h-5 w-5" />
+                      </button>
+                    </div>
+                    
+                    {isAddingSubcategory ? (
+                      <div className="flex gap-2">
+                        <Input
+                          value={newSubcategory}
+                          onChange={(e) => setNewSubcategory(e.target.value)}
+                          placeholder="Nova subcategoria"
+                          className="flex-1"
+                        />
+                        <Button 
+                          type="button" 
+                          onClick={handleAddNewSubcategory}
+                          variant="outline"
+                          size="icon"
+                          className="bg-black hover:bg-black/90 text-white"
+                        >
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          type="button" 
+                          onClick={() => setIsAddingSubcategory(false)}
+                          variant="outline"
+                          size="icon"
+                          className="text-destructive"
+                        >
+                          <span className="sr-only">Cancelar</span>
+                          ✕
+                        </Button>
+                      </div>
+                    ) : (
+                      <Select 
+                        value={product.subcategory}
+                        onValueChange={(value) => handleSelectChange("subcategory", value)}
+                        disabled={!selectedCategory}
+                      >
+                        <SelectTrigger id="subcategory">
+                          <SelectValue placeholder={selectedCategory ? "Selecione" : "Selecione uma categoria"} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {subcategories.map((subcategory) => (
+                            <SelectItem key={subcategory} value={subcategory}>{subcategory}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
                   </div>
                 </div>
               </div>
@@ -464,8 +631,8 @@ const ProductForm = () => {
                 </div>
                 
                 <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="minWholesaleQty">
+                  <div>
+                    <Label htmlFor="minWholesaleQty" className="block mb-1.5">
                       Quantidade Mínima para Atacado
                     </Label>
                     <Input
@@ -544,8 +711,9 @@ const ProductForm = () => {
                   <Label htmlFor="ncm">NCM</Label>
                   <NCMCombobox
                     value={product.ncm}
-                    onChange={(value) => handleSelectChange("ncm", value)}
+                    onChange={handleNcmChange}
                     disabled={isLoading}
+                    placeholder="Buscar código ou descrição NCM..."
                   />
                 </div>
                 

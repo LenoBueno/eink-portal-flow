@@ -11,11 +11,18 @@ export interface NCMItem {
 }
 
 // Interface para o formato de dados da API do Portal Único Siscomex
-interface SiscomexNCMItem {
-  codigo: string;
-  descricao: string;
-  dataInicio?: string;
-  dataFim?: string;
+interface SiscomexNCMResponse {
+  Data_Ultima_Atualizacao_NCM: string;
+  Ato: string;
+  Nomenclaturas: {
+    Codigo: string;
+    Descricao: string;
+    Data_Inicio: string;
+    Data_Fim: string;
+    Tipo_Ato_Ini: string;
+    Numero_Ato_Ini: string;
+    Ano_Ato_Ini: string;
+  }[];
 }
 
 // Cache para armazenar os resultados da API
@@ -65,70 +72,35 @@ export const searchNcm = async (search: string): Promise<NCMItem[]> => {
 };
 
 /**
- * Atualiza o cache local com os dados da API ou arquivo local
+ * Atualiza o cache local com os dados da API
  */
 async function updateNCMCache(): Promise<void> {
   try {
-    // Primeiro tenta carregar do arquivo local
-    try {
-      // Movendo o arquivo para a pasta public e atualizando o caminho
-      const response = await fetch('/Tabela_NCM_Vigente_20250404.json');
-      if (response.ok) {
-        const localData = await response.json();
-        if (localData && Array.isArray(localData)) {
-          processLocalData(localData);
-          lastCacheUpdate = Date.now();
-          return;
-        }
-      }
-    } catch (localError) {
-      console.log('Arquivo local não encontrado, tentando API:', localError);
-    }
+    // Tenta carregar da API
+    const responseAPI = await axios.get('https://val.portalunico.siscomex.gov.br/classif/api/publico/nomenclatura/download/json');
     
-    // Se não conseguir carregar do arquivo local, tenta da API
-    const responseAPI = await axios.get('https://portalunico.siscomex.gov.br/classif/api/publico/nomenclatura/download/json');
-    
-    if (responseAPI.data && Array.isArray(responseAPI.data)) {
+    if (responseAPI.data && responseAPI.data.Nomenclaturas) {
+      const data: SiscomexNCMResponse = responseAPI.data;
+      
       // Converte o formato da API para o formato esperado
-      ncmCache = responseAPI.data.map((item: SiscomexNCMItem) => ({
-        codigo: item.codigo,
-        descricao: item.descricao,
-        data_inicio: item.dataInicio || "",
-        data_fim: item.dataFim || "9999-12-31",
-        tipo_ato: "Siscomex",
-        numero_ato: "",
-        ano_ato: ""
+      ncmCache = data.Nomenclaturas.map(item => ({
+        codigo: item.Codigo,
+        descricao: item.Descricao,
+        data_inicio: item.Data_Inicio,
+        data_fim: item.Data_Fim,
+        tipo_ato: item.Tipo_Ato_Ini,
+        numero_ato: item.Numero_Ato_Ini,
+        ano_ato: item.Ano_Ato_Ini
       }));
       
       lastCacheUpdate = Date.now();
-    } else if (responseAPI.data && responseAPI.data.message) {
-      // A API retornou uma mensagem de erro
-      console.error('Erro da API do Siscomex:', responseAPI.data.message);
+      console.log(`Cache de NCM atualizado com ${ncmCache.length} itens.`);
+    } else {
+      console.error('Formato de resposta da API do Siscomex inesperado:', responseAPI.data);
       fallbackToDefaultData();
     }
   } catch (error) {
     console.error("Erro ao atualizar cache de NCM:", error);
-    fallbackToDefaultData();
-  }
-}
-
-/**
- * Processa os dados locais do arquivo JSON
- */
-function processLocalData(data: any[]): void {
-  try {
-    // Adaptando o formato do arquivo local para o formato esperado
-    ncmCache = data.map(item => ({
-      codigo: item.codigo || item.code || "",
-      descricao: item.descricao || item.description || "",
-      data_inicio: item.data_inicio || item.startDate || "",
-      data_fim: item.data_fim || item.endDate || "9999-12-31",
-      tipo_ato: item.tipo_ato || item.actType || "Local",
-      numero_ato: item.numero_ato || item.actNumber || "",
-      ano_ato: item.ano_ato || item.actYear || ""
-    }));
-  } catch (error) {
-    console.error("Erro ao processar dados locais:", error);
     fallbackToDefaultData();
   }
 }

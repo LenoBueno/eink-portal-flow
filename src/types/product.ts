@@ -1,4 +1,3 @@
-
 export interface Product {
   id: string;
   code: string;
@@ -26,6 +25,7 @@ export interface Product {
   // Fiscal
   fiscalType: string;
   ncm: string;
+  ncmDescription?: string;
   origin: string;
   cest: string;
   classification: string;
