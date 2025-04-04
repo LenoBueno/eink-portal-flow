@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { 
@@ -40,6 +39,7 @@ import {
   generateBarcode,
   generateInternalCode
 } from "@/services/productService";
+import NCMCombobox from "@/components/catalog/NCMCombobox";
 
 const ProductForm = () => {
   const { id } = useParams();
@@ -542,12 +542,10 @@ const ProductForm = () => {
                 
                 <div className="space-y-2">
                   <Label htmlFor="ncm">NCM</Label>
-                  <Input
-                    id="ncm"
-                    name="ncm"
+                  <NCMCombobox
                     value={product.ncm}
-                    onChange={handleInputChange}
-                    placeholder="Ex: 69149000"
+                    onChange={(value) => handleSelectChange("ncm", value)}
+                    disabled={isLoading}
                   />
                 </div>
                 
