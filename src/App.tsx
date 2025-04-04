@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -29,9 +30,9 @@ function App() {
                 <Route path="/" element={<Navigate to="/login" replace />} />
                 <Route path="/dashboard" element={<MainLayout />}>
                   <Route index element={<Dashboard />} />
-                  <Route path="/catalog/produtos" element={<ProductsPage />} />
-                  <Route path="/catalog/produtos/novo" element={<ProductForm />} />
-                  <Route path="/catalog/produtos/editar/:id" element={<ProductForm />} />
+                  <Route path="catalog/produtos" element={<ProductsPage />} />
+                  <Route path="catalog/produtos/novo" element={<ProductForm />} />
+                  <Route path="catalog/produtos/editar/:id" element={<ProductForm />} />
                 </Route>
                 <Route path="*" element={<NotFound />} />
               </Routes>
