@@ -47,7 +47,7 @@ const ProductsPage = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Catálogo de Produtos</h1>
         <Button asChild>
-          <Link to="/catalog/produtos/novo" className="flex items-center gap-2">
+          <Link to="/dashboard/catalog/produtos/novo" className="flex items-center gap-2">
             <PlusIcon size={16} /> Novo Produto
           </Link>
         </Button>
@@ -104,7 +104,7 @@ const ProductsPage = () => {
                     </TableCell>
                     <TableCell className="text-right">
                       <Button variant="ghost" size="icon" asChild>
-                        <Link to={`/catalog/produtos/editar/${product.id}`}>
+                        <Link to={`/dashboard/catalog/produtos/editar/${product.id}`}>
                           <Edit2Icon className="w-4 h-4" />
                           <span className="sr-only">Editar</span>
                         </Link>

@@ -24,8 +24,8 @@ const NotFound = () => {
           A página que você está procurando não existe ou foi movida.
         </p>
         <div className="pt-6">
-          <Button className="eink-button" asChild>
-            <Link to="/">Voltar para o Dashboard</Link>
+          <Button className="bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200" asChild>
+            <Link to="/dashboard">Voltar para o Dashboard</Link>
           </Button>
         </div>
       </div>

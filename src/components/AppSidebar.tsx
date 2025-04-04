@@ -1,8 +1,9 @@
-import { Link } from "react-router-dom";
+
+import { Link, useLocation } from "react-router-dom";
 import { 
   PackageIcon, ShoppingCartIcon, LayoutDashboardIcon, 
   Users2Icon, BarChart3Icon, Settings2Icon,
-  Store, CreditCard, Package, Notebook, StoreIcon,
+  Store, CreditCard, Package, StoreIcon,
   ChevronDown, ChevronRight
 } from "lucide-react";
 import {
@@ -19,7 +20,6 @@ import {
 } from "@/components/ui/sidebar";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { cn } from "@/lib/utils";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface SidebarItem {
@@ -41,7 +41,7 @@ const sidebarSections: SidebarSection[] = [
       {
         title: "Dashboard",
         icon: LayoutDashboardIcon,
-        href: "/",
+        href: "/dashboard",
       }
     ],
   },
@@ -51,17 +51,17 @@ const sidebarSections: SidebarSection[] = [
       {
         title: "Produtos",
         icon: PackageIcon,
-        href: "/catalog/produtos",
+        href: "/dashboard/catalog/produtos",
       },
       {
         title: "Serviços",
         icon: StoreIcon,
-        href: "/catalog/servicos",
+        href: "/dashboard/catalog/servicos",
       },
       {
         title: "Categorias",
         icon: Package,
-        href: "/catalog/categorias",
+        href: "/dashboard/catalog/categorias",
       },
     ],
   },
@@ -71,24 +71,24 @@ const sidebarSections: SidebarSection[] = [
       {
         title: "Pedidos/Orçamentos",
         icon: ShoppingCartIcon,
-        href: "/compras/pedidos-orcamentos",
+        href: "/dashboard/compras/pedidos-orcamentos",
         subItems: [
           {
             title: "Em Aberto",
             icon: ChevronRight,
-            href: "/compras/em-aberto",
+            href: "/dashboard/compras/em-aberto",
           },
           {
             title: "Devoluções",
             icon: ChevronRight,
-            href: "/compras/devolucoes",
+            href: "/dashboard/compras/devolucoes",
           }
         ]
       },
       {
         title: "Fornecedores",
         icon: Store,
-        href: "/compras/fornecedores",
+        href: "/dashboard/compras/fornecedores",
       },
     ],
   },
@@ -98,12 +98,12 @@ const sidebarSections: SidebarSection[] = [
       {
         title: "Pedidos/Orçamentos",
         icon: ShoppingCartIcon,
-        href: "/vendas/pedidos-orcamentos",
+        href: "/dashboard/vendas/pedidos-orcamentos",
       },
       {
         title: "Clientes",
         icon: Users2Icon,
-        href: "/vendas/clientes",
+        href: "/dashboard/vendas/clientes",
       },
     ],
   },
@@ -113,17 +113,17 @@ const sidebarSections: SidebarSection[] = [
       {
         title: "Fluxo de Caixa",
         icon: BarChart3Icon,
-        href: "/financeiro/fluxo-caixa",
+        href: "/dashboard/financeiro/fluxo-caixa",
       },
       {
         title: "Pagamentos",
         icon: CreditCard,
-        href: "/financeiro/pagamentos/a-pagar",
+        href: "/dashboard/financeiro/pagamentos/a-pagar",
       },
       {
         title: "Recebimentos",
         icon: CreditCard,
-        href: "/financeiro/recebimentos/a-receber",
+        href: "/dashboard/financeiro/recebimentos/a-receber",
       },
     ],
   },
@@ -133,13 +133,15 @@ const sidebarSections: SidebarSection[] = [
       {
         title: "Configurações",
         icon: Settings2Icon,
-        href: "/config/empresa/dados-gerais",
+        href: "/dashboard/config/empresa/dados-gerais",
       },
     ],
   },
 ];
 
 const AppSidebar = () => {
+  const location = useLocation();
+  
   return (
     <Sidebar className="border-r">
       <SidebarHeader className="p-4 flex flex-col items-center">
@@ -167,7 +169,10 @@ const AppSidebar = () => {
                     {item.subItems ? (
                       <CollapsibleSidebarItem item={item} />
                     ) : (
-                      <SidebarMenuButton asChild>
+                      <SidebarMenuButton 
+                        asChild 
+                        active={location.pathname === item.href || location.pathname.startsWith(item.href + "/")}
+                      >
                         <Link to={item.href} className="flex items-center">
                           <item.icon className="mr-2 h-5 w-5" />
                           <span>{item.title}</span>
@@ -194,11 +199,16 @@ interface CollapsibleSidebarItemProps {
 
 const CollapsibleSidebarItem: React.FC<CollapsibleSidebarItemProps> = ({ item }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+  
+  const isActive = item.subItems?.some(
+    subItem => location.pathname === subItem.href || location.pathname.startsWith(subItem.href + "/")
+  ) || location.pathname === item.href;
   
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen} className="w-full">
       <CollapsibleTrigger asChild>
-        <button className="flex items-center justify-between w-full py-2 px-3 text-sm rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+        <button className={`flex items-center justify-between w-full py-2 px-3 text-sm rounded-md ${isActive ? 'bg-sidebar-accent text-sidebar-accent-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}>
           <div className="flex items-center">
             <item.icon className="mr-2 h-5 w-5" />
             <span>{item.title}</span>
@@ -211,15 +221,18 @@ const CollapsibleSidebarItem: React.FC<CollapsibleSidebarItemProps> = ({ item })
         </button>
       </CollapsibleTrigger>
       <CollapsibleContent className="pl-8 pt-1 space-y-1">
-        {item.subItems?.map((subItem) => (
-          <Link 
-            key={subItem.title}
-            to={subItem.href}
-            className="flex items-center py-1.5 px-2 text-sm rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-          >
-            <span className="text-muted-foreground">{subItem.title}</span>
-          </Link>
-        ))}
+        {item.subItems?.map((subItem) => {
+          const isSubActive = location.pathname === subItem.href || location.pathname.startsWith(subItem.href + "/");
+          return (
+            <Link 
+              key={subItem.title}
+              to={subItem.href}
+              className={`flex items-center py-1.5 px-2 text-sm rounded-md ${isSubActive ? 'bg-sidebar-accent text-sidebar-accent-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
+            >
+              <span className={isSubActive ? "" : "text-muted-foreground"}>{subItem.title}</span>
+            </Link>
+          );
+        })}
       </CollapsibleContent>
     </Collapsible>
   );
